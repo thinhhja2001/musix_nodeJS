@@ -5,7 +5,7 @@ import morgan from "morgan";
 import cors from "cors";
 import env from "../../config/env.js";
 import Logging from "../logging.js";
-import ResponseMessage from "../../utils/response_message.js";
+import HTTP from "../../utils/http.js";
 function expressLoader() {
   const app = express();
   // set log request
@@ -29,11 +29,7 @@ function expressLoader() {
   app.listen(env.app.port);
   Logging.info("Server is running on port " + env.app.port);
 
-  app.get("/", (request, response) => {
-    response
-      .status(ResponseMessage.StatusOK.statusCode)
-      .json(ResponseMessage.StatusOK);
-  });
+
   return app;
 }
 export default expressLoader;
