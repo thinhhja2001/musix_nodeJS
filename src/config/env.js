@@ -45,10 +45,12 @@ const env = {
     json: toBool(getOsEnvOptional("LOG_JSON") || "true"),
     output: getOsEnv("LOG_OUTPUT"),
   },
-  database:{
-    connection: getOsEnv("DATABASE_URI")
-  }
-
+  database: {
+    connection: getOsEnv("DATABASE_URI"),
+  },
+  jwt: {
+    tokenSecret: getOsEnv("TOKEN_SECRET"),
+  },
 };
 
 export default env;
