@@ -5,7 +5,11 @@ import morgan from "morgan";
 import cors from "cors";
 import env from "../../config/env.js";
 import Logging from "../logging.js";
+import authRoutes from "../../auth_domain/routes/auth_route.js";
+import userRoutes from "../../domain_user/routes/user_route.js";
+import mongoSanitize from "express-mongo-sanitize";
 import HTTP from "../../utils/http.js";
+import { routeConfig } from "../../config/route.js";
 function expressLoader() {
   const app = express();
   // set log request
@@ -18,7 +22,9 @@ function expressLoader() {
   app.use(express.json());
 
   // parse urlencoded request body
-  app.use(express.urlencoded({ extended: true }));
+  app.use(express.urlencoded({ extended: true, limit: 10000 }));
+
+  app.use(mongoSanitize());
 
   app.use(compression());
 
@@ -26,9 +32,12 @@ function expressLoader() {
   app.use(cors({ exposedHeaders: ["Authorization"] }));
 
   app.options("*", cors());
+
+  app.use("/api", routeConfig.Auth.default);
+  app.use("/api", routeConfig.User.default);
+  app.use("/api", routeConfig.Social.default);
   app.listen(env.app.port);
   Logging.info("Server is running on port " + env.app.port);
-
 
   return app;
 }
