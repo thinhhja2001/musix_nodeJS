@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-
 const postSchema = new mongoose.Schema({
   ownerID: {
     type: String,
@@ -47,6 +46,10 @@ const postSchema = new mongoose.Schema({
   postStatus: {
     type: String,
     enum: ["BLOCK", "OPEN"],
+  },
+  fileName: {
+    type: String,
+    required: true,
   },
 });
 
