@@ -11,7 +11,10 @@ export default class AuthMiddleware {
 
     try {
       const verified = jsonwebtoken.verify(token, env.jwt.tokenSecret);
-      next();
+      if (verified) next();
+      else {
+        return res.status(HTTP.StatusBadRequest).send("Invalid Token");
+      }
     } catch (error) {
       return res.status(HTTP.StatusBadRequest).send("Invalid Token");
     }

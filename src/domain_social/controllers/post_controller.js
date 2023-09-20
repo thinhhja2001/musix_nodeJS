@@ -1,9 +1,22 @@
+import AuthUtil from "../../auth_domain/utils/auth_util.js";
 import Logging from "../../library/logging.js";
 import HTTP from "../../utils/http.js";
 import Post from "../models/post.js";
-
+import User from "../../domain_user/models/user.js";
 export default class SocialController {
   static async createNewPost(req, res) {
+    const decoded = AuthUtil.extractJWTTokenFromRequest(req);
+    if (!decoded) {
+      return res.status(HTTP.StatusForbidden).send("Not Authorized");
+    }
+    const userID = decoded._id;
+    let user;
+    await User.findById(userID).then((u) => {
+      user = u;
+    });
+    if (!user) {
+      return res.status(HTTP.StatusNotFound).send("No user found");
+    }
     const cloudinary = (await import("cloudinary")).v2;
     let file = {};
     const { content, fileName } = req.body;
@@ -24,7 +37,6 @@ export default class SocialController {
       .then((res) => {
         thumbnail["id"] = res.asset_id;
         thumbnail["url"] = res.secure_url;
-        console.log(thumbnail);
       })
       .catch((err) => {
         thumbnail["id"] = null;
@@ -34,13 +46,14 @@ export default class SocialController {
     const post = new Post({
       content: content,
       fileID: file.id,
-      ownerID: "laksnflknasf",
-      ownerUsername: "thinhhja2001",
+      ownerID: user._id,
+      ownerUsername: user.name,
       thumbnailID: thumbnail.id,
       thumbnailUrl: thumbnail.url,
       fileUrl: file.url,
       dateCreated: Date.now(),
       lastModified: Date.now(),
+      fileName: fileName,
     });
     try {
       const newPost = await post.save();
