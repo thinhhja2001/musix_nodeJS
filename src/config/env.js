@@ -51,6 +51,9 @@ const env = {
   jwt: {
     tokenSecret: getOsEnv("TOKEN_SECRET"),
   },
+  cloudinary: {
+    connectUrl: getOsEnv("CLOUDINARY_URL"),
+  },
 };
 
 export default env;

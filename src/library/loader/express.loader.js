@@ -22,7 +22,7 @@ function expressLoader() {
   app.use(express.json());
 
   // parse urlencoded request body
-  app.use(express.urlencoded({ extended: true }));
+  app.use(express.urlencoded({ extended: true, limit: 10000 }));
 
   app.use(mongoSanitize());
 
@@ -35,6 +35,7 @@ function expressLoader() {
 
   app.use("/api", routeConfig.Auth.default);
   app.use("/api", routeConfig.User.default);
+  app.use("/api", routeConfig.Social.default);
   app.listen(env.app.port);
   Logging.info("Server is running on port " + env.app.port);
 
