@@ -19,6 +19,12 @@ const userSchema = new mongoose.Schema({
     min: 6,
     max: 255,
   },
+  status: {
+    type: String,
+    required: true,
+    enum: ["VERIFIED", "UNVERIFIED"],
+    default: "UNVERIFIED",
+  },
 });
 
 export default mongoose.model("User", userSchema);

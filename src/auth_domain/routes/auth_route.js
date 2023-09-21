@@ -4,5 +4,6 @@ const router = express.Router();
 
 const authPrefix = "/authentication";
 router.post(`${authPrefix}/register`, AuthController.registerUser);
-router.post(`${authPrefix}/login`,AuthController.login)
+router.post(`${authPrefix}/login`, AuthController.login);
+router.get(`${authPrefix}/verify/:token`, AuthController.verifyAccount);
 export default router;
